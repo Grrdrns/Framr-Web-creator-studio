@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "project": {
+      "title": "Landing Page Project",
+      "description": "A saved landing page configuration including design, identity, sections, and items.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique document ID of the project." },
+        "userId": { "type": "string", "description": "The Firebase Auth user ID of the owner." },
+        "studioName": { "type": "string", "description": "Name of the studio." },
+        "config": { "type": "object", "description": "The full serialized LandingPageConfig JSON structure." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the project was created." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp when the project was last updated." },
+        "isPublished": { "type": "boolean", "description": "Whether this landing page is published live." }
+      },
+      "required": ["id", "userId", "config", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "project",
+      "description": "Collection of saved landing page designs."
+    }
+  }
+}

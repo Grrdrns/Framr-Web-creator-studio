@@ -1,0 +1,6 @@
+{
+  "name": "Framr",
+  "description": "A premium landing page generator for photographers and videographers to build, preview, and export portfolio websites.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

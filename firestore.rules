@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /projects/{projectId} {
+      allow read: if resource == null || resource.data.isPublished == true || (request.auth != null && resource.data.userId == request.auth.uid);
+      
+      allow create: if request.auth != null 
+                    && request.resource.data.userId == request.auth.uid
+                    && isValidId(projectId)
+                    && request.resource.data.id == projectId
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.updatedAt == request.time
+                    && isValidProject(request.resource.data);
+
+      allow update: if request.auth != null 
+                    && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.id == projectId
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.updatedAt == request.time
+                    && isValidProject(request.resource.data);
+
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+  }
+}
+
+function isValidId(id) { 
+  return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+}
+
+function isValidProject(project) {
+  return project.id is string && project.id.size() <= 128
+    && project.userId is string && project.userId.size() <= 128
+    && project.studioName is string && project.studioName.size() <= 256
+    && project.config is map
+    && (project.isPublished == null || project.isPublished is bool);
+}
